@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="maincontainer">
+    <div class="container">
+        <div class="box">
+            <input id ="hi" type="text" placeholder="Enter your city name">
+        </div>
+        <button class="bt"><img class="col" src="search.png" alt="jhjh"></button>
+    </div>
+    <div class="err">invalid city name</div>
+    <div class="weather">
+        <img class="w" src="rain.png" alt="">
+        <h1 class="temp">22° c</h1>
+        <h2 class="city">New York</h2>
+    </div>
+    <div class="details">
+    <div class="humidity">
+        <img src="humidity.png" alt="">
+        <p class="hu">50%</p>
+        <p>humidity</p>
+    </div>
+    <div class="wind">
+        <img src="wind.png" alt="">
+        <p class="wi">15km/hr</p>
+    </div>
+</div>
+</div>
+<script>
+    const apikey="db0163672b90e82a54f9f2232db8c137"
+    const apiurl="https://api.openweathermap.org/data/2.5/weather?&units=metric&q="
+    const inp=document.querySelector("#hi")
+    const btn=document.querySelector(".bt")
+    const weatherimage=document.querySelector(".w")
+    async function checkweather(city){
+        const response=await fetch(apiurl+city+`&appid=${apikey}`);
+        if(response.status==404){
+            document.querySelector(".err").style.display="block";
+            document.querySelector(".weather").style.display="none";
+       document.querySelector(".details").style.display="none";
+        }
+        else{
+            document.querySelector(".err").style.display="none";
+        var data=await response.json();
+        console.log(data);
+        document.querySelector(".city").innerHTML=data.name
+       document.querySelector(".temp").innerHTML=Math.round(data.main["temp"])+"° c";
+       document.querySelector(".hu").innerHTML=data.main["humidity"]+"%";
+       document.querySelector(".wi").innerHTML=data.wind["speed"]+" km/hr";
+       if(data.weather[0].main=="Clear"){
+        weatherimage.src="clear.png"
+       }
+       else if(data.weather[0].main=="Drizzle"){
+        weatherimage.src="drizzle.png"
+       }
+       else if(data.weather[0].main=="Clouds"){
+        weatherimage.src="clouds.png"
+       }
+       else if(data.weather[0].main=="Mist"){
+        weatherimage.src="mist.png"
+       }
+       else if(data.weather[0].main=="Rain"){
+        weatherimage.src="rain.png"
+       }
+       else if(data.weather[0].main=="Snow"){
+        weatherimage.src="snow.png"
+       }
+       else if(data.weather[0].main=="Humidity"){
+        weatherimage.src="humidity.png"
+       }
+       document.querySelector(".weather").style.display="block";
+       document.querySelector(".details").style.display="flex";}
+       
+       
+    }
+    //checkweather();
+    btn.addEventListener("click",()=>{
+        checkweather(inp.value);
+    })
+</script>
+    
+</body>
+</html>
